@@ -1,6 +1,7 @@
-package com.github.game.util;
+package com.github.core.util;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -20,8 +21,10 @@ public class Math3D {
 	
 	private static final float FOV_X_SCALE = (float) (1f / Utils.tan(Utils.toRadians(Math3D.FOV / 2f)));
 	
+	
 	public static float[] createViewMatrix(Camera camera) {
 
+		//Store vars on stack, rather than recalculating.
 		float pitch = Utils.toRadians(camera.pitch);
 		float yaw = Utils.toRadians(camera.yaw);
 		
@@ -32,6 +35,7 @@ public class Math3D {
 		float cos_yaw = Utils.cos(yaw);
 		float sin_yaw = Utils.sin(yaw);
 		
+		//setup the viewing matrix for the camera.
 		float[] matrix = new float[16];
 
 		matrix[0] = cos_yaw;
@@ -90,16 +94,16 @@ public class Math3D {
 		 */
 		//Start with the generic calculations. These are identical to the calculations in the getViewProjection method.
 		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-		float y_scale = FOV_X_SCALE * aspectRatio;
+		float y_scale = Math3D.FOV_X_SCALE * aspectRatio;
 		float frustum_length = Math3D.FAR_PLANE - Math3D.NEAR_PLANE;
 	
 		float temp = ((2 * Math3D.NEAR_PLANE * Math3D.FAR_PLANE) / frustum_length);
 		
 		//usually, we check if the determinant is zero, but that is mathematically impossible. 
-		float determinant_inv = 1f / (FOV_X_SCALE * y_scale * temp);
+		float determinant_inv = 1f / (Math3D.FOV_X_SCALE * y_scale * temp);
 	
 		float eye_coord_x = y_scale * temp * determinant_inv * normalized_clip_coord_x;
-		float eye_coord_y = FOV_X_SCALE * temp * determinant_inv * normalized_clip_coord_y;
+		float eye_coord_y = Math3D.FOV_X_SCALE * temp * determinant_inv * normalized_clip_coord_y;
 	
 		
 		/*
@@ -141,6 +145,19 @@ public class Math3D {
 		return new Vector3f(x / l, y / l, z / l);
 	}
 	
+	/**
+	 * Creates a transformation matrix for a given x/y/z and corresponding radial angles rx/ry/rz.
+	 * First a translation is performed for the x/y/z, followed by independent matrix rotations on
+	 * each axis. Lastly, the matrix is scaled.
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param rx
+	 * @param ry
+	 * @param rz
+	 * @param scale Scale of the artifact. Usually 1.
+	 * @return
+	 */
 	public static float[] createTransformationMatrix(float x, float y, float z, float rx, float ry, float rz, float scale) {
 		float x_angle = Utils.toRadians(rx);
 		

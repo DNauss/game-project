@@ -1,4 +1,4 @@
-package com.github.game.util;
+package com.github.core.util;
 
 public class Camera {
 

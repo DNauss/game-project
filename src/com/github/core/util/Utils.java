@@ -1,4 +1,4 @@
-package com.github.game.util;
+package com.github.core.util;
 
 /**
  * Generic methods to abstract usage of the java Math class, this is to improve code readability due to less casting in
@@ -13,10 +13,6 @@ package com.github.game.util;
 public class Utils {
 	
 	private static final float PI_180 = (float) (Math.PI / 180.0f);
-	
-	public static double tan(double angdeg) {
-		return Math.tan(angdeg);
-	}
 		
 	public static float toRadians(float angdeg) {
 		return angdeg * PI_180;
@@ -39,6 +35,10 @@ public class Utils {
 		return (float) Math.cos(a);
 	}
 
+	public static double tan(double angdeg) {
+		return Math.tan(angdeg);
+	}
+	
 	public static final float invSqrt(float a) {
 		final float half = 0.5F * a;
 		int i = Float.floatToIntBits(a);
